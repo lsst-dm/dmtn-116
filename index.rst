@@ -37,7 +37,7 @@ Nginx
 
 Nginx is a ubiquitous web server. It's one of the two most common implementations for the ingress
 controller of Kubernetes - the other being the GLBC, the GCE ingress controller available in
-Google's GKE kubernetes offering. We standardize on Nginx as the ingress controller in all
+Google's GKE Kubernetes offering. We standardize on Nginx as the ingress controller in all
 environments - even when deploying to GKE.
 
 All web traffic to our LSP aspects for a given LSP instance must go through a single Nginx ingress
@@ -297,7 +297,7 @@ The types of tokens we want to be issued include:
 
 It would not be reasonable for CILogon to implement these capabilities for
 us. As such, we've implemented a Token Issuer. In our implementation,
-the Token Issuer is integrated in with the JWT Authorizer.
+the Token Issuer is integrated with the JWT Authorizer.
 
 
 Reissued Tokens
@@ -357,7 +357,7 @@ suffix, e.g. ``https://lsst-lsp.ncsa.illinois.edu/api``.
 We have one ``.well-known`` endpoint, ``.well-known/jwks.json``, which
 is a `JWKS file <https://tools.ietf.org/html/rfc7517>`__ with the keys
 necessary for the `Token Issuer <#token-issuer>`__. This file is used
-by oauth2_proxy to verify verify tokens.
+by oauth2_proxy to verify tokens.
 
 
 Usage
@@ -370,7 +370,7 @@ Capabilities
 For securing a web application or an API, it's important to first know
 the capabilities you want to require.
 
-In the LSP, capabilities are used to gate access to services, and are
+In the LSP, capabilities are used to gate access to services and are
 typically based on the data or resources a service makes
 available.
 
@@ -430,7 +430,7 @@ JWT Authorizer should be configured with a group mapping. That group
 mapping may need to be updated per-instance.
 
 There should be a mapping to one or more groups for every `capability
-<#capabilities>`__. In early stages of LSP development, we will
+<#capabilities>`__. In the early stages of LSP development, we will
 coarsely define these mappings - mappings will map to one or two
 groups, such as ``lsst_int_lspdev``, for example. As time goes on, we
 expect groups to be created with more granularity. This will allow us
@@ -475,7 +475,7 @@ Notebook Example
 ^^^^^^^^^^^^^^^^
 
 Annotations for securing the notebook. Since the JupyterHub
-application has it's own authorization framework, we manually set an
+application has its own authorization framework, we manually set an
 additional header, ``X-Portal-Authorization``, with the token.
 ::
 
