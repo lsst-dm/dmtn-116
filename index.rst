@@ -500,6 +500,7 @@ available via the ``X-Auth-Request-Uid`` header, so we manually
 rewrite that with a configuration snippet:
 
 ::
+
   metadata:
     annotations:
       kubernetes.io/ingress.class: nginx
