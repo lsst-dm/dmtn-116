@@ -451,6 +451,8 @@ coarse-grained mapping:
            read:image: ["lsst_int_lspdev"]
            read:workspace: ["lsst_int_lspdev"]
            read:workspace/user: ["lsst_int_lspdev"]
+           exec:user: ["lsst_int_lspdev"]
+           exec:admin: ["lsst_int_lsp_admin"]
 
 Mapping each capability to a well-defined group - an example of
 fine-grained mapping:
@@ -466,6 +468,28 @@ fine-grained mapping:
            read:image: ["lsst_int_lsp_int_img_r"]
            read:workspace: ["lsst_int_lsp_int_ws_r"]
            read:workspace/user: ["lsst_int_lsp_int_ws_usr_r"]
+           exec:user: ["lsst_int_lsp_int"]
+           exec:admin: ["lsst_int_lsp_admin"]
+
+
+Adding Capabilities
+^^^^^^^^^^^^^^^^^^^
+
+If agreed upon, a capability can be added to a group mapping at any time.
+Capabilities should be documented.
+
+If we wanted to add a new admin capability, ``exec:admin/log``, which
+mapped to a single group, ``lsst_int_lsp_admin_log``, we would simply
+add a line to the ``GROUP_MAPPPINGS``:
+
+::
+
+      @@ -1,5 +1,6 @@
+       GROUP_MAPPINGS:
+           exec:portal: ["lsst_int_lspdev"]
+           ...
+           exec:admin: ["lsst_int_lsp_admin"]
+      +    exec:admin/log: ["lsst_int_lsp_admin_log"]
 
 
 Securing Web Applications
