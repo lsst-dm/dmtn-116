@@ -1,33 +1,3 @@
-..
-  Technote content.
-
-  Use the following syntax for sections:
-
-  Sections
-  ========
-  Subsections
-  -----------
-  Subsubsections
-  ^^^^^^^^^^^^^^
-  .. figure:: /_static/filename.ext
-     :name: fig-label
-
-     Caption text.
-
-:tocdepth: 1
-
-.. Please do not modify tocdepth; will be fixed when a new Sphinx theme is shipped.
-
-.. sectnum::
-
-.. TODO: Delete the note below before merging new content to the master branch.
-
-.. note::
-
-   **This technote is not yet published.**
-
-   Implementation of the LSST LSP Authentication and Authorization System
-
 .. warning::
 
    This document has been largely superseded by the identity management design documented in SQR-039_, SQR-044_, and SQR-049_ and implemented in Gafaelfawr_.
@@ -59,7 +29,7 @@ All web traffic to our LSP aspects for a given LSP instance must go through a si
 deployment. The Nginx ingress deployment functions as a reverse proxy to all web services.
 
 Nginx has a powerful feature in the form of the
-```auth_request`` <https://nginx.org/en/docs/http/ngx_http_auth_request_module.html>`__ directive
+`auth_request <https://nginx.org/en/docs/http/ngx_http_auth_request_module.html>`__ directive
 within the ``ngx_http_auth_request_module``, that is built by default in all major distributions of
 Nginx, and supported by the Nginx Kubernetes ingress controller annotations. The ``auth_request``
 directive enables authorization based on the result of a subrequest - a representative HTTP request
@@ -100,7 +70,7 @@ authenticate.
 
 For another mode of operation, oauth2_proxy also has an additional endpoint, the ``/oauth2/auth``
 endpoint, which will return a 202 if the user is authenticated. This endpoint can be used directly
-with the ```auth_request`` <http://nginx.org/en/docs/http/ngx_http_auth_request_module.html>`__
+with the `auth_request <http://nginx.org/en/docs/http/ngx_http_auth_request_module.html>`__
 directive of Nginx. These requests are always ``GET`` requests to the specified endpoint -
 ``/oauth2/auth`` in the basic oauth2 configuration. Once login is finished, cookies are stored, and
 the requests are returned to the upstream service (Nginx). Importantly, in using the
@@ -157,7 +127,7 @@ JWT Bearer Passthrough
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The first, and most important for APIs, is JWT Bearer Passthrough. JWT Bearer Passthrough allows
-tokens, typically JWT tokens (except when using `Server Session Store <#server-session-store>`__),
+tokens, typically JWT tokens (except when using :ref:`Server Session Store <server-session-store>`),
 in the Authorization HTTP header of the form ``Authorization: Bearer [token]``, as well as a
 fallback mechanism to detect if a token is actually encoded in the HTTP Basic header, for clients
 that implement HTTP Basic authentication. The fallback mechanism is based on `GitHub's
@@ -171,6 +141,8 @@ Importantly, the JWT Bearer Passthrough implementation also allows you to specif
 Providers which oauth2_proxy can trust for verifying the token. A provider in this context MUST have
 a discoverable JWKS, either through the discoverable URL in the ``jwks`` attribute on
 ``.well-known/openid-configuration``, or directly in ``.well-known/jwks.json``.
+
+.. _server-session-store:
 
 Server Session Store
 ^^^^^^^^^^^^^^^^^^^^
@@ -227,12 +199,13 @@ The two features are independent of each other, and we are working to upstream t
 However, integrating the two features together allows us to use tickets in addition to JWT tokens
 for the JWT Bearer Passthrough. This feature is used by us to write sessions to the Redis session
 store and return the associated ticket, via an additional application. We use this as a method for
-implementing API tokens. Our `JWT Authorizer <#jwt-authorizer>`__ application implements this
+implementing API tokens. Our :ref:`JWT Authorizer <jwt-authorizer>` application implements this
 feature.
 
 We intend to try to upstream this feature, but if we are unable to, we believe the complexity of
 maintaining this feature is low, as the change is very small.
 
+.. _jwt-authorizer:
 
 JWT Authorizer
 --------------
@@ -296,6 +269,8 @@ string, or if the user is in a that maps to that claim, ``lsst_int_lsp_int_img_r
 example. This dual approach allows authorization based on identity (via Groups) or capability. The
 first is more useful in web applications, the second is more useful for API access.
 
+.. _token-issuer:
+
 Token Issuer
 ------------
 
@@ -307,13 +282,15 @@ The types of tokens we want to be issued include:
 -  Reissued tokens based on the CILogon token, which are useful for web applications. These live for
    24 hours. 
 -  API tokens via a Token download interface
--  Internally reissued tokens for satisfying the `Token Acceptance
-   Guarantee <#token-acceptance-guarantee>`__
+-  Internally reissued tokens for satisfying the :ref:`Token Acceptance
+   Guarantee <token-acceptance-guarantee>`
 
 It would not be reasonable for CILogon to implement these capabilities for
 us. As such, we've implemented a Token Issuer. In our implementation,
 the Token Issuer is integrated with the JWT Authorizer.
 
+
+.. _reissued-tokens:
 
 Reissued Tokens
 ^^^^^^^^^^^^^^^
@@ -341,13 +318,15 @@ a user visits that endpoint, they will see a list of tokens that have
 been previously issued to them. A user may issue a new token,
 selecting the capabilities that token requires. By virtue of this web
 interface also being protected by the JWT Authorizer itself, the web
-interface has access to data from the `Reissued Token
-<#reissued-tokens`__, such as the user's UID and email. That
+interface has access to data from the :ref:`Reissued Token
+<reissued-tokens>`, such as the user's UID and email. That
 information is included in the API token when issued.
 
 The audience in the ``aud`` claim for these tokens is always the full hostname, e.g.
 ``https://lsst-lsp.ncsa.illinois.edu``.
 
+
+.. _token-acceptance-guarantee:
 
 Token Acceptance Guarantee
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -371,13 +350,15 @@ suffix, e.g. ``https://lsst-lsp.ncsa.illinois.edu/api``.
 
 We have one ``.well-known`` endpoint, ``.well-known/jwks.json``, which
 is a `JWKS file <https://tools.ietf.org/html/rfc7517>`__ with the keys
-necessary for the `Token Issuer <#token-issuer>`__. This file is used
+necessary for the :ref:`Token Issuer <token-issuer>`. This file is used
 by oauth2_proxy to verify tokens.
 
 
 Usage
 =====
 
+
+.. _capabilities:
 
 Capabilities
 ------------
@@ -444,8 +425,8 @@ Configuring JWT Authorizer
 JWT Authorizer should be configured with a group mapping. That group
 mapping may need to be updated per-instance.
 
-There should be a mapping to one or more groups for every `capability
-<#capabilities>`__. In the early stages of LSP development, we will
+There should be a mapping to one or more groups for every :ref:`capability
+<capabilities>`. In the early stages of LSP development, we will
 coarsely define these mappings - mappings will map to one or two
 groups, such as ``lsst_int_lspdev``, for example. As time goes on, we
 expect groups to be created with more granularity. This will allow us
@@ -514,16 +495,17 @@ username in the ``X-Remote-User`` header, the email in the
 available via the ``X-Auth-Request-Uid`` header, so we manually
 rewrite that with a configuration snippet:
 
-::
-  metadata:
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Token, X-Auth-Request-Email, X-Auth-Request-Uid
-      nginx.ingress.kubernetes.io/auth-url: https://lsst-lsp-int.ncsa.illinois.edu/auth?capability=exec:admin
-      nginx.ingress.kubernetes.io/configuration-snippet: |
-        auth_request_set $remote_user $upstream_http_x_auth_request_uid;
-        proxy_set_header X-Remote-User "$remote_user";
-        error_page 403 = "https://lsst-lsp-int.ncsa.illinois.edu/oauth2/start?rd=$request_uri";
+.. code-block:: yaml
+
+   metadata:
+     annotations:
+       kubernetes.io/ingress.class: nginx
+       nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Token, X-Auth-Request-Email, X-Auth-Request-Uid
+       nginx.ingress.kubernetes.io/auth-url: https://lsst-lsp-int.ncsa.illinois.edu/auth?capability=exec:admin
+       nginx.ingress.kubernetes.io/configuration-snippet: |
+         auth_request_set $remote_user $upstream_http_x_auth_request_uid;
+         proxy_set_header X-Remote-User "$remote_user";
+         error_page 403 = "https://lsst-lsp-int.ncsa.illinois.edu/oauth2/start?rd=$request_uri";
 
 
 Securing Web APIs
@@ -538,18 +520,16 @@ will have the ``X-Auth-Request-Token`` header set. Unauthorized
 requests will redirect to the oauth2_proxy initialization, which only
 works within browser.
 
+.. code-block:: yaml
 
-::
-
-  metadata:
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/auth-request-redirect: $request_uri
-      nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Token
-      nginx.ingress.kubernetes.io/auth-url: https://lsst-lsp-int.ncsa.illinois.edu/auth?capability=read:image
-      nginx.ingress.kubernetes.io/configuration-snippet: |
-        error_page 403 = "https://lsst-lsp-int.ncsa.illinois.edu/oauth2/start?rd=$request_uri";
-
+   metadata:
+     annotations:
+       kubernetes.io/ingress.class: nginx
+       nginx.ingress.kubernetes.io/auth-request-redirect: $request_uri
+       nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-Token
+       nginx.ingress.kubernetes.io/auth-url: https://lsst-lsp-int.ncsa.illinois.edu/auth?capability=read:image
+       nginx.ingress.kubernetes.io/configuration-snippet: |
+         error_page 403 = "https://lsst-lsp-int.ncsa.illinois.edu/oauth2/start?rd=$request_uri";
 
 .. .. rubric:: References
 
