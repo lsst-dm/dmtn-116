@@ -1,18 +1,16 @@
 .. warning::
 
-   This document has been largely superseded by the identity management design documented in SQR-039_, SQR-044_, and SQR-049_ and implemented in Gafaelfawr_.
-   Details of the full identity management system are still being worked out (see SQR-045_, SQR-046_, SQR-051_, and SQR-055_).
-   Once the full design is finalized, a new tech note documenting that design will fully replace this tech note.
+   This tech note is an obsolete description of a possible implementation of authentication to the Rubin Science Platform (prior to it receiving that name).
+   The approach presented here has been heavily revised and is no longer current.
+   It is preserved solely for historical reference.
 
-.. _SQR-039: https://sqr-039.lsst.io/
-.. _SQR-044: https://sqr-044.lsst.io/
-.. _SQR-049: https://sqr-049.lsst.io/
-.. _Gafaelfawr: https://gafaelfawr.lsst.io/
-.. _SQR-045: https://sqr-045.lsst.io/
-.. _SQR-046: https://sqr-046.lsst.io/
-.. _SQR-051: https://sqr-051.lsst.io/
-.. _SQR-055: https://sqr-055.lsst.io/
+   This is part of a tech note series on identity management for the Rubin Science Platform.
+   The primary documents are DMTN-234_, which describes the high-level design; DMTN-224_, which describes the implementation; and SQR-069_, which provides a history and analysis of the decisions underlying the design and implementation.
+   See the `references section of DMTN-224 <https://dmtn-224.lsst.io/#references>`__ for a complete list of related documents.
 
+.. _DMTN-234: https://dmtn-234.lsst.io/
+.. _DMTN-224: https://dmtn-224.lsst.io/
+.. _SQR-069: https://sqr-069.lsst.io/
 
 Building Blocks
 ===============
